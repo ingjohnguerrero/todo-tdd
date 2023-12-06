@@ -13,7 +13,7 @@ jobs:
   run-tests:
     macos:
       xcode: "15.0.0"
-    parallelism: 1  # Number of parallel containers
+    parallelism: 1
     steps:
       - checkout
       - run: 
@@ -22,13 +22,17 @@ jobs:
       - run:
           name: Run Unit Tests
           command: |
-            TESTFILES=$(circleci tests glob "ToDoTests/**/*.swift" | circleci tests split --split-by=timings)
-            xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -only-testing:$TESTFILES -verbose
+            UNIT_TESTFILES=$(circleci tests glob "ToDoTests/**/*.swift" | circleci tests split --split-by=timings)
+            for TEST in $UNIT_TESTFILES; do
+              xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -only-testing:$TEST
+            done
       - run:
           name: Run UI Tests
           command: |
-            TESTFILES=$(circleci tests glob "ToDoUITests/**/*.swift" | circleci tests split --split-by=timings)
-            xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -only-testing:$TESTFILES -verbose
+            UI_TESTFILES=$(circleci tests glob "ToDoUITests/**/*.swift" | circleci tests split --split-by=timings)
+            for TEST in $UI_TESTFILES; do
+              xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -only-testing:$TEST
+            done
 
 workflows:
   build-and-test:
