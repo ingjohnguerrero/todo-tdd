@@ -10,20 +10,28 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
 
-  run-unit-tests:
+  run-tests:
     macos:
-      xcode: "15.0.0"  # Using Xcode 15
+      xcode: "15.0.0"
+    parallelism: 2  # Number of parallel containers
     steps:
       - checkout
       - run: 
-          name: Resolve Swift Package Manager dependencies for ToDo
+          name: Resolve Swift Package Manager dependencies
           command: xcodebuild -resolvePackageDependencies -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace
       - run:
-          name: Run Unit Tests for ToDo
-          command: xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4'
+          name: Run Unit Tests
+          command: |
+            TESTFILES=$(circleci tests glob "ToDoTests/**/*.swift" | circleci tests split --split-by=timings)
+            xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -only-testing:$TESTFILES -verbose
+      - run:
+          name: Run UI Tests
+          command: |
+            TESTFILES=$(circleci tests glob "ToDoUITests/**/*.swift" | circleci tests split --split-by=timings)
+            xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -only-testing:$TESTFILES -verbose
 
 workflows:
-  say-hello-workflow:
+  build-and-test:
     jobs:
       - say-hello
-      - run-unit-tests
+      - run-tests
