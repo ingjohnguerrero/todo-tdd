@@ -12,7 +12,7 @@ jobs:
 
   run-unit-tests:
     macos:
-      xcode: "15.0.0"  # Replace with your Xcode version
+      xcode: "15.0.0"  # Updated to Xcode 15
     steps:
       - checkout
       - run: 
@@ -20,7 +20,7 @@ jobs:
           command: xcodebuild -resolvePackageDependencies -scheme ToDoTests -workspace ToDo.xcodeproj/project.xcworkspace
       - run:
           name: Run Unit Tests for ToDoTests
-          command: xcodebuild test -scheme ToDoTests -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13,OS=15.0'
+          command: xcodebuild test -scheme ToDoTests -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13,OS=latest'
 
 workflows:
   say-hello-workflow:
