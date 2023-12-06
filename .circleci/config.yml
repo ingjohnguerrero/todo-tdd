@@ -12,12 +12,12 @@ jobs:
 
   run-unit-tests:
     macos:
-      xcode: "15.0.0"  # Replace with the version of Xcode you're using
+      xcode: "13.0.0"  # Replace with your Xcode version
     steps:
       - checkout
       - run: 
-          name: Install CocoaPods dependencies
-          command: pod install
+          name: Resolve Swift Package Manager dependencies
+          command: xcodebuild -resolvePackageDependencies -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace
       - run:
           name: Run Unit Tests
           command: xcodebuild -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13,OS=15.0' test
