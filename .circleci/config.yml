@@ -13,7 +13,7 @@ jobs:
   run-tests:
     macos:
       xcode: "15.0.0"
-    parallelism: 2  # Number of parallel containers
+    parallelism: 3  # Number of parallel containers
     steps:
       - checkout
       - run: 
