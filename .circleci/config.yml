@@ -20,7 +20,7 @@ jobs:
           command: xcodebuild -resolvePackageDependencies -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace
       - run:
           name: Run Unit Tests for ToDo
-          command: xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 13,OS=latest'
+          command: xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4'
 
 workflows:
   say-hello-workflow:
