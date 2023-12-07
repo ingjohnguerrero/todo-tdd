@@ -13,26 +13,14 @@ jobs:
   run-tests:
     macos:
       xcode: "15.0.0"
-    parallelism: 1
     steps:
       - checkout
       - run: 
           name: Resolve Swift Package Manager dependencies
           command: xcodebuild -resolvePackageDependencies -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace
       - run:
-          name: Run Unit Tests
-          command: |
-            UNIT_TESTFILES=$(circleci tests glob "ToDoTests/**/*.swift" | circleci tests split --split-by=timings)
-            for TEST in $UNIT_TESTFILES; do
-              xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -only-testing:$TEST
-            done
-      - run:
-          name: Run UI Tests
-          command: |
-            UI_TESTFILES=$(circleci tests glob "ToDoUITests/**/*.swift" | circleci tests split --split-by=timings)
-            for TEST in $UI_TESTFILES; do
-              xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -only-testing:$TEST
-            done
+          name: Run Unit and UI Tests
+          command: xcodebuild test -scheme ToDo -workspace ToDo.xcodeproj/project.xcworkspace -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4'
 
 workflows:
   build-and-test:
